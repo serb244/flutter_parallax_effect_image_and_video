@@ -3,10 +3,12 @@ import 'package:video_player/video_player.dart';
 
 class VideoCard extends StatefulWidget {
   final String assetPath;
+  final bool isSelected;
 
   const VideoCard({
     super.key,
     required this.assetPath,
+    required this.isSelected,
   });
 
   @override
@@ -15,17 +17,6 @@ class VideoCard extends StatefulWidget {
 
 class _VideoCardState extends State<VideoCard> {
   late VideoPlayerController _videoPlayerController;
-  // @override
-  // void initState() {
-  //   _videoPlayerController = VideoPlayerController.network(widget.assetPath);
-  //   _videoPlayerController
-  //     ..addListener(() => setState(() {}))
-  //     ..setLooping(true)
-  //     ..setVolume(0)
-  //     ..initialize().then((value) => setState(() {}))
-  //     ..play();
-  //   super.initState();
-  // }
   @override
   void initState() {
     _videoPlayerController = VideoPlayerController.asset(widget.assetPath);
@@ -47,15 +38,18 @@ class _VideoCardState extends State<VideoCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+      margin: widget.isSelected
+          ? const EdgeInsets.symmetric(vertical: 16, horizontal: 4)
+          : const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: const Offset(0, 6),
-                blurRadius: 8)
+              color: Colors.black.withOpacity(0.2),
+              offset: const Offset(0, 6),
+              blurRadius: 8,
+            ),
           ]),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),

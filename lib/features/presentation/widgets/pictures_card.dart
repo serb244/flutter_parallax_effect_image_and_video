@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
-class PicturesCard extends StatefulWidget {
+class PictureCard extends StatefulWidget {
   final String assetPath;
   final bool isSelected;
 
-  const PicturesCard({
+  const PictureCard({
     super.key,
     required this.assetPath,
     required this.isSelected,
   });
 
   @override
-  State<PicturesCard> createState() => _PicturesCardState();
+  State<PictureCard> createState() => _PictureCardState();
 }
 
-class _PicturesCardState extends State<PicturesCard> {
+class _PictureCardState extends State<PictureCard> {
   final GlobalKey _stackKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -24,40 +25,63 @@ class _PicturesCardState extends State<PicturesCard> {
           ? const EdgeInsets.symmetric(vertical: 8, horizontal: 4)
           : const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: const Offset(0, 6),
-                blurRadius: 8)
-          ]),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              offset: const Offset(0, 6),
+              blurRadius: 8)
+        ],
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Flow(
           delegate: ParallaxFlowDelegate(
-              scrollable: Scrollable.of(context),
-              listItemContext: context,
-              backgroundImageKey: _stackKey),
+            scrollable: Scrollable.of(context),
+            listItemContext: context,
+            backgroundImageKey: _stackKey,
+          ),
           children: [
             AspectRatio(
-              aspectRatio: 16 / 9,
+              aspectRatio: 3 / 3,
               child: Stack(
+                fit: StackFit.expand,
                 key: _stackKey,
-                alignment: Alignment.bottomCenter,
-                // fit: StackFit.passthrough,
-                children: [
-                  Image.asset(widget.assetPath),
-                  Positioned(
-                      bottom: 20,
-                      // left: 50,
-                      child: Text(widget.assetPath)),
+                children: <Widget>[
+                  buildImage(),
+                  buildPositionedText(),
                 ],
               ),
             )
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildPositionedText() {
+    return Positioned(
+      right: 100,
+      // left: 70,
+      bottom: 20,
+      child: Opacity(
+        opacity: 0.7,
+        child: Container(
+          color: Colors.black,
+          child: Text(
+            widget.assetPath,
+            style: const TextStyle(color: Colors.white, fontSize: 26),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Image buildImage() {
+    return Image.asset(
+      widget.assetPath,
+      fit: BoxFit.fitHeight,
     );
   }
 }
@@ -82,25 +106,18 @@ class ParallaxFlowDelegate extends FlowDelegate {
 
   @override
   void paintChildren(FlowPaintingContext context) {
-    // Calculate the position of this list item within the viewport.
     final scrollableBox = scrollable.context.findRenderObject() as RenderBox;
     final listItemBox = listItemContext.findRenderObject() as RenderBox;
     final listItemOffset = listItemBox.localToGlobal(
         listItemBox.size.topCenter(Offset.zero),
         ancestor: scrollableBox);
 
-    // Determine the percent position of this list item within the
-    // scrollable area.
     final viewportDimension = scrollable.position.viewportDimension;
     final scrollFraction =
         (listItemOffset.dx / viewportDimension).clamp(0.0, 1.0);
 
-    // Calculate the vertical alignment of the background
-    // based on the scroll percent.
     final horizontalAlignment = Alignment(scrollFraction * 2 - 1, 0.0);
 
-    // Convert the background alignment into a pixel offset for
-    // painting purposes.
     final backgroundSize =
         (backgroundImageKey.currentContext!.findRenderObject() as RenderBox)
             .size;
@@ -108,7 +125,6 @@ class ParallaxFlowDelegate extends FlowDelegate {
     final childRect = horizontalAlignment.inscribe(
         backgroundSize, Offset.zero & listItemSize);
 
-    // Paint the background.
     context.paintChild(
       0,
       transform:
