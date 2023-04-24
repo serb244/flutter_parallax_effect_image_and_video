@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'features/presentation/widgets/parallax.dart';
 import 'features/presentation/widgets/parallax_builder.dart';
 
 void main() {
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Flutter Parallax Effect Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

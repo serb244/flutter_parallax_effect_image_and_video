@@ -2,6 +2,7 @@
     package="com.example.parallax_effect">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
+        android:hardwareAccelerated="false"
         android:label="parallax_effect"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
