@@ -42,6 +42,9 @@ class _VideoCardState extends State<VideoCard> {
 
   @override
   Widget build(BuildContext context) {
+    widget.isSelected
+        ? _videoPlayerController.play()
+        : _videoPlayerController.pause();
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       margin: widget.isSelected
